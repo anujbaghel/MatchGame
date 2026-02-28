@@ -9,6 +9,8 @@ public class GridGenerator : MonoBehaviour
     [SerializeField] private int rows = 2;
     [SerializeField] private int columns = 2;
     [SerializeField] private float spacing = 0.2f;
+    [SerializeField] private float paddingHorizontal = 0.5f;
+    [SerializeField] private float paddingVertical = 1f;
     [SerializeField] private float cardsShowDuration = 1f;
 
     private List<Card> cardsPool = new List<Card>();
@@ -28,8 +30,8 @@ public class GridGenerator : MonoBehaviour
         float cameraHeight = cam.orthographicSize * 2f;
         float cameraWidth = cameraHeight * cam.aspect;
 
-        float availableWidth = cameraWidth - (columns - 1) * spacing;
-        float availableHeight = cameraHeight - (rows - 1) * spacing;
+        float availableWidth = cameraWidth - paddingHorizontal * 2 - (columns - 1) * spacing;
+        float availableHeight = cameraHeight - paddingVertical * 2 - (rows - 1) * spacing;
 
         SpriteRenderer prefabSR = cardPrefab.cardSpriteReneder;
         Vector2 spriteSize = prefabSR.sprite.bounds.size;
@@ -47,6 +49,7 @@ public class GridGenerator : MonoBehaviour
         float totalGridWidth = columns * scaledCardWidth + (columns - 1) * spacing;
         float totalGridHeight = rows * scaledCardHeight + (rows - 1) * spacing;
 
+        // Center the grid within the padded area
         Vector2 startPos = new Vector2(
             -totalGridWidth / 2f + scaledCardWidth / 2f,
             totalGridHeight / 2f - scaledCardHeight / 2f

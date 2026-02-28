@@ -1,0 +1,8 @@
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/GameActivity/CMakeFiles/game.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+/Users/anuj.baghel/Workspace/MatchGame/.utmp/RelWithDebInfo/27s5630v/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir
