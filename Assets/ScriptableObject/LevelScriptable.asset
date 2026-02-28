@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd38031e608b94276af749e572b62883, type: 3}
+  m_Name: LevelScriptable
+  m_EditorClassIdentifier: Assembly-CSharp::LevelScriptable
+  levelDataArray:
+  - LevelNumber: 1
+    rows: 4
+    columns: 4
+  - LevelNumber: 2
+    rows: 4
+    columns: 6
+  - LevelNumber: 3
+    rows: 6
+    columns: 6
+  - LevelNumber: 4
+    rows: 8
+    columns: 6
+  - LevelNumber: 5
+    rows: 8
+    columns: 8

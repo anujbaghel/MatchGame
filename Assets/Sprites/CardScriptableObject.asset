@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73b7fdc57568442a486b62cd3bcbc6ff, type: 3}
+  m_Name: CardScriptableObject
+  m_EditorClassIdentifier: Assembly-CSharp::CardScriptableObject
+  cardPropertiesArray:
+  - cardName: Octopus
+    cardNumber: 1
+    frontSprite: {fileID: 4857150367323897801, guid: 2f370cbb046f046f4b10a00f1bc3e7f0, type: 3}
+  - cardName: Starfish
+    cardNumber: 2
+    frontSprite: {fileID: -1268956596, guid: 2f370cbb046f046f4b10a00f1bc3e7f0, type: 3}
+  - cardName: Squirel
+    cardNumber: 3
+    frontSprite: {fileID: -364911132, guid: 2f370cbb046f046f4b10a00f1bc3e7f0, type: 3}
+  - cardName: Hen
+    cardNumber: 4
+    frontSprite: {fileID: -1939518426, guid: 2f370cbb046f046f4b10a00f1bc3e7f0, type: 3}
+  - cardName: Elephant
+    cardNumber: 5
+    frontSprite: {fileID: 1345934994, guid: 2f370cbb046f046f4b10a00f1bc3e7f0, type: 3}
+  - cardName: Crab
+    cardNumber: 6
+    frontSprite: {fileID: -1315152544, guid: 2f370cbb046f046f4b10a00f1bc3e7f0, type: 3}
