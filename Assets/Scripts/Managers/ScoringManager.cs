@@ -27,4 +27,13 @@ public class ScoringManager : MonoBehaviour
     public void ClosePanel(){
       ScoringPanel.localScale = Vector3.zero;
     }
+
+    public int GetScore() {
+        return score;
+    }
+
+    public void SetScore(int newScore) {
+        score = newScore;
+        scoreText.text = "Score: " + score;
+    }
 }

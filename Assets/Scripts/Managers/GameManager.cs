@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour, ICardListener
 
     private void Start() {
         SoundManager.Instance.PlayBackgroundMusic(SoundEnum.BackgroundMusic);
+        if (LevelManager.Instance.HasSaveFile()) {
+            mainMenu.ShowContinueButton(true);
+        }
     }
 
     public void StartLevel() {
@@ -22,16 +25,59 @@ public class GameManager : MonoBehaviour, ICardListener
         scoringManager.OpenPanel();
         scoringManager.ResetScore();
         ResetGame();
+        LevelManager.Instance.DeleteSave();
+        mainMenu.ShowContinueButton(false);
     }
 
     private void ResetGame() {
         totalMatches = 0;
-        consecutiveMatches= 0;
+        consecutiveMatches = 0;
     }
 
     public void NextLevel() {
         LevelManager.Instance.currentLevel++;
+        LevelManager.Instance.SaveLevelProgress();
         StartLevel();
+    }
+
+    public void SaveGame() {
+        GameSaveData saveData = new GameSaveData
+        {
+            currentLevel = LevelManager.Instance.currentLevel,
+            rows = gridGenerator.GetRows(),
+            columns = gridGenerator.GetColumns(),
+            score = scoringManager.GetScore(),
+            consecutiveMatches = this.consecutiveMatches,
+            totalMatches = this.totalMatches,
+            cards = gridGenerator.GetCardStates()
+        };
+
+        LevelManager.Instance.SaveGame(saveData);
+        mainMenu.ShowContinueButton(true);
+    }
+
+
+    public void LoadGame() {
+        GameSaveData saveData = LevelManager.Instance.LoadGame();
+        if (saveData == null) {
+            Debug.LogWarning("[GameManager] No save data to load.");
+            return;
+        }
+
+        mainMenu.CloseMainMenu();
+
+        LevelManager.Instance.currentLevel = saveData.currentLevel;
+
+        CardProperties[] cardData = gridGenerator.BuildCardDataFromSave(saveData);
+        bool[] matchedStates = gridGenerator.BuildMatchedStatesFromSave(saveData);
+        gridGenerator.GenerateGrid(saveData.rows, saveData.columns, cardData, this, matchedStates);
+
+        scoringManager.OpenPanel();
+        scoringManager.SetScore(saveData.score);
+        consecutiveMatches = saveData.consecutiveMatches;
+        totalMatches = saveData.totalMatches;
+
+        Debug.Log($"[GameManager] Game loaded — Level {saveData.currentLevel}, Score {saveData.score}, Matches {saveData.totalMatches}");
     }
 
     public void OnCardClicked(Card card) {
@@ -59,9 +105,11 @@ public class GameManager : MonoBehaviour, ICardListener
             card2.OnMatchFound();
             scoringManager.AddScore(consecutiveMatches);
             SoundManager.Instance.PlaySoundEffect(SoundEnum.MatchFoundSound);
+            SaveGame();
             if(totalMatches == (LevelManager.Instance.GetCurrentLevelData().rows * LevelManager.Instance.GetCurrentLevelData().columns) / 2){
                 OnLevelComplete();
                 SoundManager.Instance.PlaySoundEffect(SoundEnum.LevelCompleteSound);
+                LevelManager.Instance.DeleteSave();
             }
         }
         else{
@@ -77,9 +125,13 @@ public class GameManager : MonoBehaviour, ICardListener
     }
 
     private void OnLevelComplete() {
+        LevelManager.Instance.DeleteSave();
+        mainMenu.ShowContinueButton(false);
+
         scoringManager.ClosePanel();
         mainMenu.ChangeThemeToNextLevel();
         mainMenu.OpenMainMenu();
         LevelManager.Instance.currentLevel++;
+        LevelManager.Instance.SaveLevelProgress();
     }
 }

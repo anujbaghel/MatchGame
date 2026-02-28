@@ -15,8 +15,14 @@ public class GridGenerator : MonoBehaviour
     
     public void GenerateGrid(LevelData levelData, ICardListener cardListener)
     {
-        rows = levelData.rows;
-        columns = levelData.columns;
+        CardProperties[] cardData = GenerateCardsData(levelData.rows, levelData.columns);
+        GenerateGrid(levelData.rows, levelData.columns, cardData, cardListener);
+    }
+
+    public void GenerateGrid(int rows, int columns, CardProperties[] cardData, ICardListener cardListener, bool[] matchedStates = null)
+    {
+        this.rows = rows;
+        this.columns = columns;
 
         Camera cam = Camera.main;
         float cameraHeight = cam.orthographicSize * 2f;
@@ -31,12 +37,10 @@ public class GridGenerator : MonoBehaviour
         float targetWidth = availableWidth / columns;
         float targetHeight = availableHeight / rows;
 
-        // 🔹 Calculate uniform scale factor once
         float scaleX = targetWidth / spriteSize.x;
         float scaleY = targetHeight / spriteSize.y;
         float scaleFactor = Mathf.Min(scaleX, scaleY);
 
-        // 🔹 Now compute actual scaled card world size
         float scaledCardWidth = spriteSize.x * scaleFactor;
         float scaledCardHeight = spriteSize.y * scaleFactor;
 
@@ -47,13 +51,13 @@ public class GridGenerator : MonoBehaviour
             -totalGridWidth / 2f + scaledCardWidth / 2f,
             totalGridHeight / 2f - scaledCardHeight / 2f
         );
-        CardProperties[] cardPropertiesList = GenerateCardsData(rows, columns);
+
         int cardIndex = 0;
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < columns; col++)
             {
-                 Vector2 position = new Vector2(
+                Vector2 position = new Vector2(
                     startPos.x + col * (scaledCardWidth + spacing),
                     startPos.y - row * (scaledCardHeight + spacing)
                 );
@@ -70,7 +74,14 @@ public class GridGenerator : MonoBehaviour
                 card.transform.position = position;
                 cardsPool[cardIndex].gameObject.SetActive(true);
                 card.gameObject.transform.localScale = Vector3.one * scaleFactor;
-                card.SetUpCard(cardPropertiesList[row * columns + col], cardListener);
+                card.SetUpCard(cardData[row * columns + col], cardListener);
+
+                // If saved matched state exists and this card was matched, deactivate it
+                if (matchedStates != null && matchedStates[row * columns + col])
+                {
+                    card.OnMatchFound();
+                }
+
                 cardIndex++;
             }
         }
@@ -115,6 +126,59 @@ public class GridGenerator : MonoBehaviour
             array[randomIndex] = temp;
         }
     }
+
+    private CardProperties FindCardPropertiesByNumber(int cardNumber)
+    {
+        foreach (CardProperties cp in cardScriptableObject.cardPropertiesArray)
+        {
+            if (cp.cardNumber == cardNumber)
+                return cp;
+        }
+        Debug.LogWarning($"[GridGenerator] CardProperties not found for cardNumber: {cardNumber}");
+        return cardScriptableObject.cardPropertiesArray[0];
+    }
+
+    public CardSaveData[] GetCardStates()
+    {
+        int totalCards = rows * columns;
+        CardSaveData[] cardStates = new CardSaveData[totalCards];
+
+        for (int i = 0; i < totalCards && i < cardsPool.Count; i++)
+        {
+            Card card = cardsPool[i];
+            cardStates[i] = new CardSaveData
+            {
+                gridIndex = i,
+                cardNumber = card.cardProperties.cardNumber,
+                isMatched = !card.gameObject.activeSelf
+            };
+        }
+
+        return cardStates;
+    }
+
+    public CardProperties[] BuildCardDataFromSave(GameSaveData saveData)
+    {
+        CardProperties[] cardData = new CardProperties[saveData.cards.Length];
+        for (int i = 0; i < saveData.cards.Length; i++)
+        {
+            cardData[i] = FindCardPropertiesByNumber(saveData.cards[i].cardNumber);
+        }
+        return cardData;
+    }
+
+    public bool[] BuildMatchedStatesFromSave(GameSaveData saveData)
+    {
+        bool[] matched = new bool[saveData.cards.Length];
+        for (int i = 0; i < saveData.cards.Length; i++)
+        {
+            matched[i] = saveData.cards[i].isMatched;
+        }
+        return matched;
+    }
+
+    public int GetRows() { return rows; }
+    public int GetColumns() { return columns; }
 
     IEnumerator ShowAllCards() {
         foreach (Card card in cardsPool) {
