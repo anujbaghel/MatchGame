@@ -44,7 +44,8 @@ public class Card : MonoBehaviour
         float time = 0f;
         float startAngle = transform.eulerAngles.y;
         float targetAngle;
-
+        SoundManager.Instance.PlaySoundEffect(SoundEnum.FlipSound);
+        
          // Normalize angle (Unity gives 0–360)
         float normalized = startAngle > 180 ? startAngle - 360 : startAngle;
         targetAngle = Mathf.Abs(normalized) < 1f ? 180f : 0f;
